@@ -1,4 +1,4 @@
-{%- from "freeipa/map/map.jinja" import client with context %}
+{%- from "freeipa/map/map.jinja" import client, ipaservers with context %}
 {#
   Client installation
 
@@ -8,6 +8,10 @@
   my FreeIPA guide. But also, BSD, MacOS, and Solaris are different beasts when configuring them for FreeIPA.
   This is why you'll find those clients have separate states entirely.
 #}
+
+{%- if ipaservers.0 != client.get('hostname', grains['fqdn']) %}
+
 include:
   {{ client.clientsls|yaml(false)|indent(2) }}
 
+{%- endif %}

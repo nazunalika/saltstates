@@ -175,11 +175,11 @@ ipa_client_install:
       - file: ipa_service_principal
     {%- endif %}
 
-{#krb5_config:
+krb5_config:
   file.managed:
     - name: {{ client.krb5conf }}
     - template: jinja
-    - source: salt://freeipa/files/{{ os }}-krb5.conf #}
+    - source: salt://freeipa/files/{{ os }}-krb5.conf
 
 {%- endif %}
 
