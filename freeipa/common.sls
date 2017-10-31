@@ -2,3 +2,4 @@
 include:
   - linux.auth.ldap
   - linux.auth.sssd
+  - freeipa.krb5

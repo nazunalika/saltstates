@@ -168,20 +168,18 @@ ipa_client_install:
     - require:
       - pkg: ipa_client_packages
     - require_in:
-      - file: krb5_config
+{#    - file: krb5_config #}
       - file: sssd_config
     {%- if client.install_principal is defined %}
     - onchanges:
       - file: ipa_service_principal
     {%- endif %}
 
-{%- if pillar.freeipa.server is not defined %}
-krb5_config:
+{#krb5_config:
   file.managed:
     - name: {{ client.krb5conf }}
     - template: jinja
-    - source: salt://freeipa/files/{{ os }}-krb5.conf
-{%- endif %}
+    - source: salt://freeipa/files/{{ os }}-krb5.conf #}
 
 {%- endif %}
 
