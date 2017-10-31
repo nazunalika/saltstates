@@ -1,0 +1,3 @@
+sssd:
+  package: sssd
+  configuration: /etc/sssd/sssd.conf

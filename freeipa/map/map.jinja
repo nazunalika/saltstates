@@ -1,0 +1,35 @@
+{% import_yaml "freeipa/yaml/client.yaml" as client_defaults %}
+{% import_yaml "freeipa/yaml/server.yaml" as server_defaults %}
+{% import_yaml "freeipa/yaml/osmaps.yaml" as osmaps_defaults %}
+{% import_yaml "freeipa/yaml/sunmaps.yaml" as sunmaps_defaults %}
+
+{# set client = salt['grains.filter_by'](client_defaults, merge=salt['pillar.get']('freeipa:client')) #}
+{% set client = salt['grains.filter_by'](client_defaults, merge=salt['grains.filter_by'](osmaps_defaults, grain='osmajorrelease', merge=salt['pillar.get']('freeipa:client'))) %}
+{% set server = salt['grains.filter_by'](server_defaults, merge=salt['pillar.get']('freeipa:server')) %}
+
+{% if pillar.freeipa.client is defined %}
+  {% if client.servers is defined %}
+    {% set ipaservers = client.servers %}
+  {% else %}
+    {% set ipaservers = [client.server] %}
+  {% endif %}
+
+  {% if client.hostname is defined %}
+    {% set ipahost = client.hostname %}
+  {% else %}
+    {% set ipahost = grains['fqdn'] %}
+  {% endif %}
+{% endif %}
+
+{% if pillar.freeipa.server is defined %}
+  {% if server.servers is defined %}
+    {% set ipaservers = server.servers %}
+  {% else %}
+    {% if server.hostname is defined %}
+      {% set ipaservers = [server.hostname] %}
+    {% else %}
+      {% set ipaservers = [grains['fqdn']] %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+

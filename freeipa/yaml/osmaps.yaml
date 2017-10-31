@@ -1,0 +1,16 @@
+5:
+  clientsls:
+    - freeipa.keytab
+    - freeipa.client.packages
+    - freeipa.legacy.rhel5
+6:
+  clientsls:
+    - freeipa.keytab
+    - freeipa.client.packages
+    - freeipa.client.install
+7:
+  clientsls:
+    - freeipa.keytab
+    - freeipa.client.packages
+    - freeipa.client.install
+

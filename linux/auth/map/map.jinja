@@ -1,0 +1,12 @@
+{% import_yaml "linux/auth/yaml/defaults.yaml" as defaults %}
+{% import_yaml "linux/auth/yaml/osmaps.yaml" as osmaps %}
+{% import_yaml "linux/auth/yaml/sssd.yaml" as sssd %}
+
+{% set auth = salt['grains.filter_by'](
+    defaults,
+    merge=salt['grains.filter_by'](
+      osmaps,
+      grain='osmajorrelease',
+    ), base='auth',
+  )
+%}

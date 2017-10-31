@@ -1,0 +1,9 @@
+RedHat:
+  pkgs:
+    - ipa-server
+    - ipa-server-dns
+  named_service: named-pkcs11
+  ldapconf: /etc/openldap/ldap.conf
+  sssdconf: /etc/sssd/sssd.conf
+  namedconf: /etc/named.conf
+  krb5conf: /etc/krb5.conf

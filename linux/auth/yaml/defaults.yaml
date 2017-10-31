@@ -1,0 +1,17 @@
+auth:
+  type: ipa
+  module: sssd
+  sssdcontent: auth:sssd
+  sssdconf: /etc/sssd/sssd.conf
+  nsswitchcontent: auth:nsswitch
+  nsswitchconf: /etc/nsswitch.conf
+  systemauth: /etc/pam.d/system-auth-ac
+  passwordauth: /etc/pam.d/password-auth-ac
+  systemauthcontent: auth:systemauth
+  includes:
+    - .packages
+    - freeipa
+    - .nsswitch
+    - .pam
+    - .libuser
+

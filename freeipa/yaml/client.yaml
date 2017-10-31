@@ -1,0 +1,25 @@
+RedHat:
+  pkgs:
+    - ipa-client
+    - sssd
+    - sssd-ipa
+  mkhomedir: true
+  dns:
+    updates: false
+  ldapconf: /etc/openldap/ldap.conf
+  sssdconf: /etc/sssd/sssd.conf
+  krb5conf: /etc/krb5.conf
+  clientsls:
+    - freeipa.client.packages
+    - freeipa.client.install
+Solaris:
+  pkgs:
+    - sudo_ldap
+    - sudo
+    - curl
+  ldapconf: /etc/ldap.conf
+  krb5conf: /etc/krb5/krb5.conf
+  clientsls:
+    - freeipa.client.legacy
+MacOS:
+  krb5conf: /etc/krb5.conf

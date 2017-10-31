@@ -1,0 +1,6 @@
+5.10:
+  clientsls:
+    - solaris.ipa.10_client_install
+5.11:
+  clientsls:
+    - solaris.ipa.11_client_install

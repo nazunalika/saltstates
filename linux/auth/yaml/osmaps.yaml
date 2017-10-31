@@ -1,0 +1,25 @@
+6:
+  version: rhel6
+  provider: service
+  packages:
+    - openldap-clients
+    - authconfig
+    - pam
+    - glibc
+    - sssd
+    - sssd-client
+    - sssd-common
+    - ipa-client
+7:
+  version: rhel7
+  provider: systemd
+  packages:
+    - openldap-clients
+    - authconfig
+    - pam
+    - glibc
+    - sssd
+    - sssd-client
+    - sssd-common
+    - ipa-client
+
