@@ -175,11 +175,13 @@ ipa_client_install:
       - file: ipa_service_principal
     {%- endif %}
 
+{%- if pillar.freeipa.server is not defined %}
 krb5_config:
   file.managed:
     - name: {{ client.krb5conf }}
     - template: jinja
     - source: salt://freeipa/files/{{ os }}-krb5.conf
+{%- endif %}
 
 {%- endif %}
 
