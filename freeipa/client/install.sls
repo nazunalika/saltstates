@@ -66,7 +66,7 @@ ipa_host_add:
               {%- if pillar.freeipa.server is defined %}
               "ip_address": "{{ salt['grains.get']('fqdn_ip4')[0] }}",
               {%- endif %}
-              "os": "{{ grains['os'] }} {{ grains['osmajorrelease'] }}",
+              "nsosversion": "{{ grains['os'] }} {{ grains['osmajorrelease'] }}",
               "userpassword": "{{ otp }}",
               "version": "{{ client.apiversion }}"
             }
@@ -152,7 +152,6 @@ ipa_client_install:
   cmd.run:
     - name: >
         ipa-client-install
-        --server {{ client.server }}
         --domain {{ client.domain }}
         --realm {{ client.realm }}
         --hostname {{ ipahost }}
@@ -168,18 +167,11 @@ ipa_client_install:
     - require:
       - pkg: ipa_client_packages
     - require_in:
-{#    - file: krb5_config #}
       - file: sssd_config
     {%- if client.install_principal is defined %}
     - onchanges:
       - file: ipa_service_principal
     {%- endif %}
-
-{#krb5_config:
-  file.managed:
-    - name: {{ client.krb5conf }}
-    - template: jinja
-    - source: salt://freeipa/files/{{ os }}-krb5.conf #}
 
 {%- endif %}
 
