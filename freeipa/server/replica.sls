@@ -1,4 +1,4 @@
-{%- from "freeipa/map.jinja" import server, ipaservers with context %}
+{%- from "freeipa/map/map.jinja" import server, ipaservers with context %}
 
 {# 
   If server, promote it to a replica. We don't need username password arguments since we are added

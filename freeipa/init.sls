@@ -3,10 +3,10 @@
   what we see in pillar.
 #}
 include:
-  {%- if pillar.freeipa.client is defined %}
-  - .client
-  {%- endif %}
   {%- if pillar.freeipa.server is defined %}
   - .server
+  {%- endif %}
+  {%- if pillar.freeipa.client is defined %}
+  - .client
   {%- endif %}
   - .common

@@ -168,6 +168,7 @@ ipa_client_install:
       - pkg: ipa_client_packages
     - require_in:
       - file: sssd_config
+      - file: krb5_conf
     {%- if client.install_principal is defined %}
     - onchanges:
       - file: ipa_service_principal
