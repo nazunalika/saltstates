@@ -9,9 +9,6 @@ RedHat:
   ldapconf: /etc/openldap/ldap.conf
   sssdconf: /etc/sssd/sssd.conf
   krb5conf: /etc/krb5.conf
-  clientsls:
-    - freeipa.client.packages
-    - freeipa.client.install
 Solaris:
   pkgs:
     - sudo_ldap
@@ -19,7 +16,11 @@ Solaris:
     - curl
   ldapconf: /etc/ldap.conf
   krb5conf: /etc/krb5/krb5.conf
+  krb5src: salt://freeipa/files/solaris-krb5.conf
   clientsls:
-    - freeipa.client.legacy
+    - freeipa.krb5
+    - solaris.ipa
+  commonsls:
+    - freeipa.krb5
 MacOS:
   krb5conf: /etc/krb5.conf

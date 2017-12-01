@@ -16,7 +16,7 @@ ipa_replica_install:
         {# Normal stuff here #}
         --no-ntp
         --ssh-trust-dns
-        --unattend
+        --unattended
         {# Conditional #}
         {%- if server.get('ca', true) %} --setup-ca{%- endif %}
         {%- if server.get('mkhomedir', True) %} --mkhomedir{%- endif %}

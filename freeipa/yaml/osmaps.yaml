@@ -3,14 +3,27 @@
     - freeipa.keytab
     - freeipa.client.packages
     - freeipa.legacy.rhel5
+  commonsls:
+    - linux.auth.ldap
+    - freeipa.krb5
+  krb5src: salt://freeipa/files/rhel5-krb5.conf
 6:
   clientsls:
     - freeipa.keytab
     - freeipa.client.packages
     - freeipa.client.install
+  commonsls:
+    - linux.auth.ldap
+    - linux.auth.sssd
+    - freeipa.krb5
+  krb5src: salt://freeipa/files/rhel6-krb5.conf
 7:
   clientsls:
     - freeipa.keytab
     - freeipa.client.packages
     - freeipa.client.install
-
+  commonsls:
+    - linux.auth.ldap
+    - linux.auth.sssd
+    - freeipa.krb5
+  krb5src: salt://freeipa/files/rhel7-krb5.conf

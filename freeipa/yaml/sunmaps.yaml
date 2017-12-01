@@ -1,6 +1,8 @@
 5.10:
   clientsls:
+    - freeipa.krb5
     - solaris.ipa.10_client_install
 5.11:
   clientsls:
+    - freeipa.krb5
     - solaris.ipa.11_client_install

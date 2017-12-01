@@ -1,5 +1,4 @@
-{# add other platform support here #}
+{%- from "freeipa/map/map.jinja" import client with context %}
 include:
-  - linux.auth.ldap
-  - linux.auth.sssd
-  - freeipa.krb5
+  {{ client.commonsls|yaml(false)|indent(2) }}
+
