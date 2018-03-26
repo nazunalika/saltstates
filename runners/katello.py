@@ -191,11 +191,12 @@ def addToHostCollections(host, name, server):
     addHostResult = _put_json(server, 'api_url_katello', '/host_collections/' + str(hostCollectionID) + '/add_hosts', hostPayload)
 
     keys = addHostResult['displayMessages'].keys()
+    error = addHostResult['displayMessages']['error']
     if keys[0] == 'success':
-        if keys[1] == 'error':
-            return {host: 'Host already in "{0}" group on {1} instance'.format(name, server)}
-        else:
+        if keys[1] == 'error' and error == []:
             return {host: 'Successfully added to host group "{0}" on {1} instance'.format(name, server)}
+        else:
+            return {host: 'Host already in "{0}" group on {1} instance'.format(name, server)}
     else:
         return {host: 'There was an error adding to "{0}" on {1}'.format(name, server)}
 
