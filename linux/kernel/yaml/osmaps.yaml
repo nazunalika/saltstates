@@ -1,0 +1,9 @@
+6:
+  includes:
+    - .grub
+7:
+  includes:
+    - .grub2
+8:
+  includes:
+    - .grub2

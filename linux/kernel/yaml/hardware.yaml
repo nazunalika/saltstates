@@ -1,0 +1,4 @@
+kvm:
+  elevator: none
+physical:
+  elevator: deadline

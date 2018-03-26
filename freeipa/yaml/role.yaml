@@ -1,0 +1,8 @@
+app:
+  ipagroup: middleware
+web:
+  ipagroup: middleware
+weblogic:
+  ipagroup: middleware
+activemq:
+  ipagroup: middleware

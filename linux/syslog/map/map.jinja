@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml "linux/syslog/yaml/defaults.yaml" as defaults %}
+{% import_yaml "linux/syslog/yaml/osmaps.yaml" as osmaps %}
+
+{% set syslog = salt['grains.filter_by'](
+    defaults,
+    merge=salt['grains.filter_by'](
+      osmaps,
+      grain='osmajorrelease',
+    ), base='syslog',
+) %}

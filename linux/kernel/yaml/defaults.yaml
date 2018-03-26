@@ -1,0 +1,4 @@
+kernel:
+  elevator: deadline
+  boot_options:
+    - audit=1

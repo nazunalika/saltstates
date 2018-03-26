@@ -1,0 +1,5 @@
+{% import_yaml "test/yaml/test.yaml" as client_defaults %}
+
+{% set client = salt['grains.filter_by'](client_defaults, merge=salt['pillar.get']('freeipa:client')) %}
+
+

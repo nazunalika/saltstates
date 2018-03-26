@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml "linux/kernel/yaml/defaults.yaml" as defaults %}
+{% import_yaml "linux/kernel/yaml/osmaps.yaml" as osmap %}
+{% import_yaml "linux/kernel/yaml/hardware.yaml" as hardware %}
+
+{% set kernel = salt['grains.filter_by'](
+    defaults,
+    merge=salt['grains.filter_by'](
+      osmap,
+      grain='osmajorrelease',
+      merge=salt['grains.filter_by'](
+        hardware,
+        grain='virtual',
+      ),
+    ), base='kernel',
+) %}
+

@@ -1,0 +1,4 @@
+RedHat:
+  client:
+    test:
+     value: is_value

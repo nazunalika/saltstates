@@ -1,0 +1,10 @@
+6:
+  service: rsyslog
+  version: 6
+  conf: /etc/rsyslog.conf
+  source: salt://linux/syslog/files/6-rsyslog.conf
+7:
+  service: rsyslog
+  version: 7
+  conf: /etc/rsyslog.conf
+  source: salt://linux/syslog/files/7-rsyslog.conf

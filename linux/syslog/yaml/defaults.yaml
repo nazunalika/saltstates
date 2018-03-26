@@ -1,0 +1,2 @@
+syslog:
+  conf: /etc/rsyslog.conf

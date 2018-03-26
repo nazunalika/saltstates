@@ -1,4 +1,6 @@
 ## User Accounts
+#
+#  This applies for systems that have a common "role". It does not account for one-offs.
 
 {% set pget = salt['pillar.get'] %}
 {% set override_user = pget("overrideuser") %}
@@ -48,7 +50,7 @@ users_{{ name }}_user:
     - name: {{ home }}
     - user: {{ name }}
     - group: {{ usergroup }}
-    - mode: 0700
+    - mode: 700
     - require:
       - user: users_{{ name }}_user
       - group: users_{{ name }}_{{ usergroup }}_group
@@ -111,7 +113,7 @@ users_{{ name }}_user:
 users_{{ name }}_ssh_dir:
   file.directory:
     - name: {{ home }}/.ssh
-    - mode: 0700
+    - mode: 700
     - user: {{ name }}
     - group: {{ usergroup }}
 
@@ -122,7 +124,7 @@ users_{{ name }}_ssh_pub:
     - name: {{ home }}/.ssh/id_rsa.pub
     - user: {{ name }}
     - group: {{ usergroup }}
-    - mode: 0644
+    - mode: 644
     - source: {{ user['sshpub'] }}
 {% endif %}
 {% endif %}
@@ -134,19 +136,36 @@ users_{{ name }}_sshpriv:
     - name: {{ home }}/.ssh/id_rsa
     - user: {{ name }}
     - group: {{ usergroup }}
-    - mode: 0400
+    - mode: 400
     - makedirs: True
     - contents_pillar: users:{{ name }}:sshpriv
 
 {% endif %}
 
 ## Extra directories (edge case)
+## This should only be needed if the account needs something separate from its
+## own directory for the application (eg, weblogic, oracle)
 {% if 'directory' in user %}
 {% for directory in user.get('directory', []) %}
 users_{{ name }}_{{ directory }}:
   file.directory:
     - name: {{ directory }}
-    - mode: 0755
+    - mode: 755
+    - user: {{ name }}
+    - group: {{ usergroup }}
+{% endfor %}
+{% endif %}
+
+## Extra closed directories (edge case)
+## This should only be needed for these reasons:
+##   -> A log directory or other space that needs to be 700
+##   -> The service account is in LDAP and hasn't been moved locally
+{% if 'directory_closed' in user %}
+{% for directory in user.get('directory_closed', []) %}
+users_{{ name }}_{{ directory }}:
+  file.directory:
+    - name: {{ directory }}
+    - mode: 700
     - user: {{ name }}
     - group: {{ usergroup }}
 {% endfor %}
@@ -193,7 +212,7 @@ users_{{ name }}_{{ cron }}_cron:
 users_{{ name }}_gpgkey:
   file.managed:
     - name: {{ home }}/.usergpg.sec
-    - mode: 0600
+    - mode: 600
     - user: {{ name }}
     - group: {{ usergroup }}
     - contents_pillar: users:{{ name }}:gpgkey:data
@@ -239,7 +258,7 @@ users_{{ name }}_limits:
 users_{{ name }}_bashrc:
   file.managed:
     - name: {{ home }}/.bashrc
-    - mode: 0644
+    - mode: 644
     - user: {{ name }}
     - group: {{ name }}
     - source: {{ pillar['users'][name]['etc_skel_bashrc'] }}
@@ -249,17 +268,17 @@ users_{{ name }}_bashrc:
 users_{{ name }}_profile:
   file.managed:
     - name: {{ home }}/.bash_profile
-    - mode: 0644
+    - mode: 644
     - user: {{ name }}
     - group: {{ name }}
     - source: {{ pillar['users'][name]['etc_skel_profile'] }}
 {% endif %}
 
 {% if 'etc_skel_tmux' in user %}
-users_{{ name }}_profile:
+users_{{ name }}_tmux:
   file.managed:
     - name: {{ home }}/.tmux.conf
-    - mode: 0644
+    - mode: 644
     - user: {{ name }}
     - group: {{ name }}
     - source: {{ pillar['users'][name]['etc_skel_tmux'] }}
