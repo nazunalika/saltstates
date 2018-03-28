@@ -5,8 +5,7 @@ Katello Runner
 
 .. versionadded: 2017.7.4
 
-Runner to interact with Katello using the API. This is a work in progress and I hope 
-someday it can be added to Salt itself!
+Runner to interact with Katello using the API. You're welcome.
 
 :codeauthor: Louis Abel <tucklesepk@gmail.com>
 :maintainer: Louis Abel <tucklesepk@gmail.com>
@@ -59,6 +58,7 @@ def __virtual__():
 def _get_katello_configuration(katello_url=''):
     '''
     Return configuration read from the master configuration file.
+
     '''
     katello_config = __opts__['katello'] if 'katello' in __opts__ else None
 
@@ -106,17 +106,18 @@ def _open_session_test(server):
     elif r.status_code == '200':
         return True
 
-def _get_json(server, url, api):
+def _get_json(server, api, url):
     config = _get_katello_configuration(server)
-    r = requests.get(config[api] + url, auth=(config['username'], config['password']), verify=config['certificate'])
+    param = {'per_page': '1000'}
+    r = requests.get(config[api] + url, auth=(config['username'], config['password']), verify=config['certificate'], params=param)
     return r.json()
 
-def _get_results(server, url, api):
+def _get_results(server, api, url):
     '''
     Loosely borrowed from Red Hat's example. This will attempt to get json returns. In the case there's an error,
     it will report it. In other cases, it will return the json results from the request.
     '''
-    jsn = _get_json(server, url, api)
+    jsn = _get_json(server, api, url)
     if jsn.get('error'):
         print "Error: " + jsn['error']['message']
     else:
@@ -128,8 +129,8 @@ def _get_results(server, url, api):
             print "No results available."
     return None
 
-def _get_all_results(server, url, api):
-    results = _get_results(server, url, api)
+def _get_all_results(server, api, url):
+    results = _get_results(server, api, url)
     if results:
         return results
 
@@ -147,9 +148,6 @@ def _put_json(server, api, url, payload):
     '''
     config = _get_katello_configuration(server)
     r = requests.put(config[api] + url, auth=(config['username'], config['password']), verify=config['certificate'], headers={'Content-Type': 'application/json', 'Accept': 'text/plain'}, data=payload)
-    #print config[api] + url
-    #print payload
-    #print r.json()
     return r.json()
 
 def _post_json(server, api, url, payload):
@@ -181,14 +179,22 @@ def addToHostCollections(host, name, server):
         log.error(err_msg)
         return err_msg
 
-    hostCollections = _get_all_results(server, '/host_collections/', 'api_url_katello')
+    hostCollections = _get_all_results(server, 'api_url_katello', '/host_collections/')
     hostCollectionID = _get_collection_id(hostCollections, name)
-    hostData = _get_all_results(server, '/hosts/' + host, 'api_url')
+
+    hostData = _get_all_results(server, 'api_url', '/hosts/' + host)
+    if hostData == None:
+        return {host: 'Host {0} does not exist on {1}.'.format(host, server)}
+
     ids = []
     ids.append(hostData['id'])
     hostPayload_dict = {"host_ids": ids}
     hostPayload = json.dumps(hostPayload_dict)
     addHostResult = _put_json(server, 'api_url_katello', '/host_collections/' + str(hostCollectionID) + '/add_hosts', hostPayload)
+
+    # I don't know why, but katello returns either displayMessage or displayMessages. Love it.
+    if addHostResult.keys()[0] == 'displayMessage':
+        return {host: 'Host Collection "{0}" does not exist on {1}'.format(collection, server)}
 
     keys = addHostResult['displayMessages'].keys()
     error = addHostResult['displayMessages']['error']
@@ -202,7 +208,7 @@ def addToHostCollections(host, name, server):
 
 def deleteHost(host, server):
     '''
-    Deletes a host from Katello. If a host does not exist or the incorrect name is provided, the
+    Deletes a host from Katello. If a host does not exist or the incorrect name is provided, the 
     functions above (get_all_results) will return None. Because of this, it is assumed the host
     does not exist or was already removed.
     '''
@@ -212,8 +218,8 @@ def deleteHost(host, server):
         err_msg = 'Exception raised when connecting to Katello server ({0}): {1}'.format(server, exc)
         log.error(err_msg)
         return err_msg
-
-    hostData = _get_all_results(server, '/hosts/' + host, 'api_url')
+    
+    hostData = _get_all_results(server, 'api_url', '/hosts/' + host)
     if hostData == None:
        return {host: 'Host {0} already deleted or does not exist on {1}.'.format(host, server)}
 
@@ -228,3 +234,31 @@ def deleteHost(host, server):
     if keys[0] == 'comment':
         return {host: 'Host {0} has been successfully deleted from {1}'.format(host, server)}
 
+def getErrata(host, server):
+    '''
+    Reports applicable errata for a given host.
+
+    Note: This only works for Satellite 6 or Katello instances that contain the necessary errata ID's for a given package.
+    '''
+    try:
+        _open_session_test(server)
+    except Exception as exc:
+        err_msg = 'Exception raised when connecting to Katello server ({0}): {1}'.format(server, exc)
+        log.error(err_msg)
+        return err_msg
+
+    hostData = _get_all_results(server, 'api_url', '/hosts/' + host)
+    if hostData == None:
+        return {host: 'Host {0} does not exist on {1}.'.format(host, server)}
+
+    hostID = str(hostData['id'])
+
+    getHostResults = _get_json(server, 'api_url', '/hosts/' + hostID + '/errata')
+
+    i = []
+
+    for x in getHostResults['results']:
+        errata = x['errata_id'] + " " + x['title']
+        i.append(errata)
+
+    return {host: i}
