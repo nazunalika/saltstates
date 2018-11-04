@@ -2,7 +2,7 @@ useradd:
   file.managed:
     - name: /etc/default/useradd
     - source: salt://linux/pci/files/useradd
-    - mode: 600
+    - mode: 644
     - user: root
     - group: root
 

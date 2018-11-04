@@ -12,6 +12,7 @@
 sssd_config:
   service.running:
     - name: sssd
+    - enable: True
     - watch:
       - file: sssd_config
 
@@ -22,3 +23,4 @@ sssd_config:
     - mode: 600
     - source: salt://linux/auth/files/sssd/ipa-sssd.conf
     - template: jinja
+    - backup_mode: both

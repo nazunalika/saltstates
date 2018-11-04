@@ -1,4 +1,4 @@
-{% if grains['role'] is defined and grains['role'] != 'router' %}
+{% if grains['role'] is undefined or grains['role'] != 'router' %}
 
 net.ipv4.conf.all.send_redirects:
   sysctl.present:

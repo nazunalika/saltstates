@@ -1,6 +1,9 @@
 {% from "linux/auth/map/map.jinja" import auth with context %}
 {% set os = auth.version %}
 
+include:
+  - linux.auth.packages
+
 nsswitch_config:
   file.managed:
     - name: /etc/nsswitch.conf

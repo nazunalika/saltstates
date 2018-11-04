@@ -18,10 +18,11 @@ sshd:
 
   file.managed:
     - name: /etc/ssh/sshd_config
+    - source: salt://linux/ssh/files/{{ grains['osmajorrelease'] }}-sshd_config
     - user: root
     - group: root
     - mode: 600
-    - contents_pillar: ssh:sshd_config
+    - template: jinja
 
 banner:
   file.managed:

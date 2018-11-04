@@ -126,7 +126,7 @@ ipa_cleanup_cookies:
 
 ipa_cleanup_keytab:
   file.absent:
-    - name: /tmp/principal.keytab
+    - name: /tmp/service.keytab
     - require:
       - cmd: ipa_host_add
     - require_in:

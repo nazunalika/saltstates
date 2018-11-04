@@ -10,6 +10,7 @@
     - sssd-client
     - sssd-common
     - ipa-client
+    - libuser
 7:
   version: rhel7
   provider: systemd
@@ -22,4 +23,5 @@
     - sssd-client
     - sssd-common
     - ipa-client
+    - libuser
 

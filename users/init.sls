@@ -98,17 +98,18 @@ users_{{ name }}_user:
 
 ## Some accounts get created in /opt by default. This is here for those users.
 ## The pillar will need to have etc_skel with any value.
-{% if 'etc_skel' in user %}
+{# if 'etc_skel' in user %}
   cmd.run:
     - name: cp -n /etc/skel/.*rc {{ home }} ; cp -n /etc/skel/.bash_* {{ home }} ; chown -R {{ name }}:{{ usergroup }} {{ home }}
-{% endif %}
+{% endif #}
 
 
 ## If the user have an ssh authorized keys, it will be created.
 {% if 'sshauth' in user %}
   ssh_auth.present:
     - user: {{ name }}
-    - source: {{ user['sshauth'] }}
+    - names: 
+      {{ user['sshauth']|yaml(false)|indent{6} }}
 
 users_{{ name }}_ssh_dir:
   file.directory:
@@ -282,6 +283,16 @@ users_{{ name }}_tmux:
     - user: {{ name }}
     - group: {{ name }}
     - source: {{ pillar['users'][name]['etc_skel_tmux'] }}
+{% endif %}
+
+{% if 'etc_skel_inputrc' in user %}
+users_{{ name }}_inputrc:
+  file.managed:
+    - name: {{ home }}/.inputrc
+    - mode: 644
+    - user: {{ name }}
+    - group: {{ name }}
+    - source: {{ pillar['users'][name]['etc_skel_inputrc'] }}
 {% endif %}
 
 {% endfor %}

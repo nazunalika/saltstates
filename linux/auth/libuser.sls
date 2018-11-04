@@ -1,18 +1,12 @@
-{% from "linux/auth/map/map.jinja" import auth with context %}
-{% set os = auth.version %}
-
-libuser_reqpkgs:
-  pkg.installed:
-    - pkgs:
-      - libuser
+include:
+  - linux.auth.packages
 
 libuser_conf:
-  file.managed:
+  file.replace:
     - name: /etc/libuser.conf
-    - source: salt://linux/auth/files/libuser/{{ os }}-libuser.conf
-    - user: root
-    - group: root
-    - mode: 644
+    - pattern: ^crypt_style = .*
+    - repl: crypt_style = sha512
+    - append_if_not_found: False
     - require:
-      - pkg: libuser_reqpkgs
+      - pkg: authentication_packages
 
