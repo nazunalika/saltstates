@@ -9,6 +9,20 @@
   care about rDNS, add --no-reverse (fyi, this isn't recommended).
 #}
 
+include:
+  - freeipa.server.packages
+
+/etc/sysconfig/dirsrv.systemd:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 0644
+    - contents: |
+        [Service]
+        # uncomment this line to raise the file descriptor limit
+        # LimitNOFILE=8192
+        LimitNOFILE=16384
+
 ipa_replica_install:
   cmd.run:
     - name: >
@@ -29,6 +43,9 @@ ipa_replica_install:
         --no-forwarders
         {%- endif %}
     - creates: /etc/ipa/default.conf
+    - require:
+      - pkg: ipa_server_packages
+      - file: /etc/sysconfig/dirsrv.systemd
     - require_in:
       - file: sssd_config
 
