@@ -19,6 +19,17 @@
 include:
   - freeipa.server.packages
 
+/etc/sysconfig/dirsrv.systemd:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 0644
+    - contents: |
+        [Service]
+        # uncomment this line to raise the file descriptor limit
+        # LimitNOFILE=8192
+        LimitNOFILE=16384
+
 freeipa_server_install:
   cmd.run:
     - name: >
@@ -45,6 +56,7 @@ freeipa_server_install:
     - creates: /etc/ipa/default.conf
     - require:
       - pkg: ipa_server_packages
+      - file: /etc/sysconfig/dirsrv.systemd
     - require_in:
       - service: sssd_config
 
