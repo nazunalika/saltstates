@@ -1,0 +1,8 @@
+{% set default_version = '3.7.7' %}
+{% set old_version = '3.6.6' %}
+
+rabbitmq:
+  version: {{ salt['grains.get']('rabbitmq_version', default_version) }}
+  service: rabbitmq
+  home: /opt/rabbitmq
+  old_version: {{ old_version }}

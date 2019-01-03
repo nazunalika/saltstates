@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml "rabbitmq/yaml/defaults.yaml" as defaults %}
+{% import_yaml "rabbitmq/yaml/osmap.yaml" as osmap %}
+
+{% set version_lookup = 'hashes:rabbitmq:' + defaults.rabbitmq.version %}
+
+{% set rabbitmq = salt['grains.filter_by'](
+  defaults,
+  merge=salt['grains.filter_by'](
+    osmap,
+    grain='osmajorrelease',
+    merge=salt['pillar.get'](version_lookup, {}),
+  ),
+  base='rabbitmq',
+) %}
+

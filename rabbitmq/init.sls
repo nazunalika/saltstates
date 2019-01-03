@@ -1,3 +1,4 @@
-{% from "rabbitmq/map.jinja" import rabbitmq with context %}
+{% from "rabbitmq/map/map.jinja" import rabbitmq with context %}
 include:
-  - .{{ rabbitmq.rabbitmq_type }}
+  - .unpack
+  - .configure

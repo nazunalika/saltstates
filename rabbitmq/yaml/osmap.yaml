@@ -1,0 +1,5 @@
+7:
+  provider: systemd
+  location: /etc/systemd/system/rabbitmq.service
+  servicename: rabbitmq.service
+  serviceperm: 644
