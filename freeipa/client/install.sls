@@ -106,6 +106,7 @@ ipa_host_add_ipaservers:
           ]
         }' https://{{ ipaservers[0] }}/ipa/json
     - require:
+      - cmd: ipa_host_add
       - cmd: ipa_get_ticket
     - require_in: 
       - cmd: ipa_client_install
@@ -151,7 +152,7 @@ ipa_kdestroy:
 ipa_client_install:
   cmd.run:
     - name: >
-        ipa-client-install
+        /usr/sbin/ipa-client-install
         --domain {{ client.domain }}
         --realm {{ client.realm }}
         --hostname {{ ipahost }}
@@ -166,6 +167,7 @@ ipa_client_install:
     - creates: /etc/ipa/default.conf
     - require:
       - pkg: ipa_client_packages
+      - cmd: ipa_host_add
     - require_in:
       - file: sssd_config
       - file: krb5_conf
